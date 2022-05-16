@@ -10,10 +10,9 @@ import java.util.ArrayList;
  * ****************************** *
  */
 public class DictBinTree implements Dict {
-  private ArrayList<Integer> data;
+
   private BinNode root;
   public DictBinTree() {
-    this.data = new ArrayList<>();
     this.root=null;
   }
   /**
@@ -37,20 +36,14 @@ public class DictBinTree implements Dict {
    */
   private boolean TreeSearch(BinNode parrent_node, int k){
     if (parrent_node == null){
-      System.out.println("Didnt found k => "+k);
       return false;
     }
     if (k==parrent_node.getKey()){
-      System.out.println("Found k => "+k+" in parrent_node => "+parrent_node.getKey());
       return  true;
     }
     if(k<parrent_node.getKey()){
-      System.out.println("search k => "+k+" < parrent_node => "+parrent_node.getKey());
-      System.out.println("get left childe");
       return TreeSearch(parrent_node.getLeft_child(), k);
     }else{
-      System.out.println("search k => "+k+" > parrent_node => "+parrent_node.getKey());
-      System.out.println("get Right childe");
       return TreeSearch(parrent_node.getRight_child(),k);
     }
   }
@@ -95,9 +88,9 @@ public class DictBinTree implements Dict {
    */
   @Override
   public ArrayList<Integer> orderedTraversal() {
-    this.data = new ArrayList<>();
-    travel(this.root);
-    return this.data;
+    ArrayList<Integer> data = new ArrayList<>();
+    travel(this.root, data);
+    return data;
   }
   /**
    * @param parrent_node
@@ -108,11 +101,11 @@ public class DictBinTree implements Dict {
    * Den rejser gennem nodens børns børn og gemmer værdierne i this.data.
    * Den går left left left til den finder en nul værdi og så hør den right left til den finder en ny værdi at gemme i data.
    */
-  private void travel(BinNode parrent_node){
+  private void travel(BinNode parrent_node,ArrayList<Integer> data ){
     if (parrent_node !=null){
-      travel(parrent_node.getLeft_child());
-      this.data.add(parrent_node.getKey());
-      travel(parrent_node.getRight_child());
+      travel(parrent_node.getLeft_child(), data);
+      data.add(parrent_node.getKey());
+      travel(parrent_node.getRight_child(), data);
     }
   }
 }

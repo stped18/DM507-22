@@ -21,7 +21,6 @@ public class BinNode {
     this.left_child=null;
     this.right_child=null;
     this.key=key;
-    System.out.println("new node is create with key value => "+this.key);
   }
 
   public int getKey() {
