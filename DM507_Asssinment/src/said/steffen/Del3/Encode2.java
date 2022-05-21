@@ -41,10 +41,12 @@ public class Encode2 {
         createTableFrequrency();
         InsertPQ();
         huffmand();
+
         System.out.println("-------------------------");
         for (int w:code) {
             System.out.println(w);
         }
+        bitToOutput(argss);
         System.out.println(argss[0]);
         System.out.println(new File(argss[0]).getAbsolutePath());
         System.out.println("Done Encode!!......>\n");
@@ -55,6 +57,8 @@ public class Encode2 {
     private static void inputScanner(String[] args) throws FileNotFoundException {
         fileInputStream = new FileInputStream(args[0]);
         bitInputStream = new BitInputStream(fileInputStream);
+        fileOutputStream = new FileOutputStream(args[1]);
+        bitOutputStream =new BitOutputStream(fileOutputStream);
 
     }
 
@@ -97,7 +101,16 @@ public class Encode2 {
         }
 
 
-        if(!(e.getData() instanceof Element[])){
+        if((e.getData() instanceof Element[])){
+            System.out.println("is right node");
+            buf[count]=0;
+            find(((Element[])e.getData())[0], count+1);
+            buf[count]=1;
+            find(((Element[])e.getData())[1],count+1);
+
+
+        }else{
+
             System.out.println("is left node");
             System.out.println(e);
             String keyword = "";
@@ -110,23 +123,37 @@ public class Encode2 {
             } catch(NumberFormatException ex){
                 System.out.println(ex);
             }
+        }
+    }
 
+    public static void bitToOutput(String[] args) throws IOException
+    {
+        fileInputStream = new FileInputStream(args[0]);
+        fileOutputStream = new FileOutputStream(args[1]);
+        int content;
+        String strBit;
+        String cont;
 
-
-        }else{
-
-            System.out.println("is right node");
-            buf[count]=0;
-            find(((Element[])e.getData())[0], count+1);
-            buf[count]=1;
-            find(((Element[])e.getData())[1],count+1);
-
-
-
+        for(int i = 0; i < bitsArray.length; i++ )
+        {
+            int x = bitsArray[i];
+            bitOutputStream.writeInt(x);
         }
 
 
-
+//		write file into bytes.
+        while ((content = fileInputStream.read()) != -1)
+        {
+            cont = String.valueOf(code[content]);
+            for(int i = 0; i < cont.length(); i++)
+            {
+                strBit = Character.toString(cont.charAt(i));
+                int intBit = Integer.parseInt(strBit);
+                bitOutputStream.writeBit(intBit);
+            }
+        }
+        bitOutputStream.writeBit(0);
+        bitOutputStream.writeBit(1);
     }
 
 }
