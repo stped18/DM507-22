@@ -8,11 +8,9 @@ import said.steffen.Del1.Element;
 import said.steffen.Del1.PQ;
 import said.steffen.Del1.PQHeap;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLOutput;
+import java.util.Scanner;
 
 public class Encode {
 
@@ -30,14 +28,26 @@ public class Encode {
   public static void main(String[] args) throws IOException {
 
         System.out.println("Staring Encode!!......>\n");
-        readFile(args);
+        // Scanner skal slettes inde aflevering
+        Scanner sc = new Scanner(System.in);
+
+        String[] argss = new String[2];
+        System.out.println("Enter input file");
+        argss[0]="src/said/steffen/Del3/"+sc.nextLine();
+        System.out.println("Enter output file");
+        argss[1]= "src/said/steffen/Del3/"+sc.nextLine();
+
+        System.out.println(argss[0]);
+        System.out.println(new File(argss[0]).getAbsolutePath());
+        readFile(argss);
         createTabel();
         huffman();
-        bitToOutput(args);
-      System.out.println("Done Encode!!......>\n");
+        bitToOutput(argss);
+        System.out.println("Done Encode!!......>\n");
   }
 
   private static void readFile(String args[]) throws IOException {
+
       fileInputStream = new FileInputStream(args[0]);
       bitInputStream = new BitInputStream(fileInputStream);
   }
@@ -55,7 +65,6 @@ public class Encode {
             row++;
             colum=0;
         }
-
       }
       createElements(table);
     }
@@ -89,7 +98,6 @@ public class Encode {
     {
         if (x == null)
         {
-            System.out.println("Tree is empty");
             return;
         }
 
@@ -105,7 +113,7 @@ public class Encode {
             bitValue = strNum.toString();
 
             codeList[x.getKey()] = bitValue;
-
+            System.out.println(codeList.toString());
             return;
         }
         else
@@ -140,10 +148,6 @@ public class Encode {
             }
 
         }
-
-
-
-//		write file into bytes.
         while ((content = fileInputStream.read()) != -1)
         {
             cont = codeList[content];
@@ -159,5 +163,4 @@ public class Encode {
         fileInputStream.close();
         fileInputStream.close();
     }
-
 }
