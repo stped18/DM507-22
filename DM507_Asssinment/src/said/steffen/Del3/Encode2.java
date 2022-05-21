@@ -22,6 +22,9 @@ public class Encode2 {
     private static PQ pq = new PQHeap();
     private static int[] bitsArray = new int[256];
     private static int[][] table;
+    private static int[] code = new int[256];
+    private static int[] buf = new int[256];
+    private static int n=0;
 
     public static void main(String[] args) throws IOException {
 
@@ -38,6 +41,10 @@ public class Encode2 {
         createTableFrequrency();
         InsertPQ();
         huffmand();
+        System.out.println("-------------------------");
+        for (int w:code) {
+            System.out.println(w);
+        }
         System.out.println(argss[0]);
         System.out.println(new File(argss[0]).getAbsolutePath());
         System.out.println("Done Encode!!......>\n");
@@ -62,21 +69,64 @@ public class Encode2 {
     private static void InsertPQ(){
         for(int i=0; i<256; i++){
             pq.insert(new Element(bitsArray[i],i));
+            n++;
         }
+
     }
 
     private static void huffmand(){
 
-        for(int i =0; i <255; i++ ){
-            Element[] elements = new Element[2];
+        for(int i =0; i <n-1; i++ ){
+            Element[] z = new Element[2];
             // z.left
-            elements[0] = pq.extractMin();
+            Element l = pq.extractMin();
+            z[0] = l;
             // z.right
-            elements[1] = pq.extractMin();
-            pq.insert(new Element((elements[0].getKey()+elements[1].getKey()),elements));
+            Element r = pq.extractMin();
+            z[1] = r;
+            int freq = (z[0].getKey()+z[1].getKey());
+            pq.insert(new Element(freq,z));
+
+        }
+        int count =0;
+        find(pq.extractMin(), count);
+    }
+    public static void find(Element e, int count){
+        if(e == null){
+            System.out.println("Last rot");
+        }
+
+
+        if(!(e.getData() instanceof Element[])){
+            System.out.println("is left node");
+            System.out.println(e);
+            String keyword = "";
+            for(int i =0; i<count;i++ ){
+                keyword+= buf[i];
+            }
+            try{
+                System.out.println("keyword : "+keyword);
+                code[(int) e.getData()]=Integer.parseInt(keyword);
+            } catch(NumberFormatException ex){
+                System.out.println(ex);
+            }
+
+
+
+        }else{
+
+            System.out.println("is right node");
+            buf[count]=0;
+            find(((Element[])e.getData())[0], count+1);
+            buf[count]=1;
+            find(((Element[])e.getData())[1],count+1);
+
+
 
         }
 
-        System.out.println(pq.extractMin());
+
+
     }
+
 }

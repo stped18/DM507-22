@@ -110,4 +110,11 @@ public class PQHeap implements PQ {
       return this.heap;
    }
 
+
+  @Override
+  public String toString() {
+    return "PQHeap{" +
+            "heap=" + heap +
+            '}';
+  }
 }
